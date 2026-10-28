@@ -1,0 +1,37 @@
+meta {
+  name: Create destination account
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/accounts
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "currency": "EUR"
+  }
+}
+
+script:post-response {
+  bru.setVar("destinationAccountId", res.body.id);
+}
+
+tests {
+  test("creates EUR account with a zero default balance", function () {
+    expect(res.status).to.equal(201);
+    expect(res.body.id).to.be.a("string").that.is.not.empty;
+    expect(res.body.balance).to.equal(0);
+    expect(res.body.currency).to.equal("EUR");
+  });
+}
+
+docs {
+  # Create destination account
+  
+  Creates the zero-balance destination account used by the transfer scenario.
+  The response ID is stored as `destinationAccountId`.
+}

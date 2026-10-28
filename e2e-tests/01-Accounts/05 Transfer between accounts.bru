@@ -1,0 +1,37 @@
+meta {
+  name: Transfer between accounts
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/accounts/{{sourceAccountId}}/transfer/{{destinationAccountId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "amount": 32.55
+  }
+}
+
+tests {
+  test("transfers money and returns both updated accounts", function () {
+    expect(res.status).to.equal(200);
+    expect(res.body.amount).to.equal(32.55);
+    expect(res.body.from.id).to.equal(bru.getVar("sourceAccountId"));
+    expect(res.body.from.balance).to.at.most(93.2);
+    expect(res.body.from.currency).to.equal("EUR");
+    expect(res.body.to.id).to.equal(bru.getVar("destinationAccountId"));
+    expect(res.body.to.balance).to.at.least(58.05);
+    expect(res.body.to.currency).to.equal("EUR");
+  });
+}
+
+docs {
+  # Transfer between accounts
+  
+  Requires the two account creation requests and the deposit request in this
+  folder to have run first.
+}

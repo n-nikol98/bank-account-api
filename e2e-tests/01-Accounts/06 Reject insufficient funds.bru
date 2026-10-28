@@ -1,0 +1,26 @@
+meta {
+  name: Reject insufficient funds
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/accounts/{{sourceAccountId}}/transfer/{{destinationAccountId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "amount": 999.99
+  }
+}
+
+tests {
+  test("rejects a transfer larger than the source balance", function () {
+    expect(res.status).to.equal(409);
+    expect(res.body.title).to.equal("Conflict");
+    expect(res.body.timestamp).to.be.a("string").that.is.not.empty;
+    expect(res.body.detail).to.match(/^Insufficient funds: available balance is \d+(\.\d{0,2})?, requested amount is 999\.99\.$/);
+  });
+}

@@ -1,0 +1,20 @@
+meta {
+  name: Get source account
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/accounts/{{sourceAccountId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("returns the account created by the previous request", function () {
+    expect(res.status).to.equal(200);
+    expect(res.body.id).to.equal(bru.getVar("sourceAccountId"));
+    expect(res.body.balance).to.equal(125.75);
+    expect(res.body.currency).to.equal("EUR");
+  });
+}

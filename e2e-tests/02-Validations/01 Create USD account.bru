@@ -1,0 +1,29 @@
+meta {
+  name: Create USD account
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/accounts
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "currency": "USD"
+  }
+}
+
+script:post-response {
+  bru.setVar("usdAccountId", res.body.id);
+}
+
+tests {
+  test("creates USD account used by the mismatch scenario", function () {
+    expect(res.status).to.equal(201);
+    expect(res.body.balance).to.equal(0);
+    expect(res.body.currency).to.equal("USD");
+  });
+}

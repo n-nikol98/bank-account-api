@@ -1,0 +1,33 @@
+meta {
+  name: Reject currency mismatch
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/accounts/{{sourceAccountId}}/transfer/{{usdAccountId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "amount": 1.00
+  }
+}
+
+tests {
+  test("rejects a transfer due to different currencies", function () {
+    expect(res.status).to.equal(409);
+    expect(res.body.title).to.equal("Conflict");
+    expect(res.body.timestamp).to.be.a("string").that.is.not.empty;
+    expect(res.body.detail).to.eql("Transfers between different currencies are not supported: EUR and USD.");
+  });
+}
+
+docs {
+  # Reject currency mismatch
+  
+  Uses the USD account created at the start of this folder and the funded EUR
+  source account from `01-Accounts`.
+}

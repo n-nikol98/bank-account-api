@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 public class AccountController {
+
     private final AccountService service;
 
     /**
@@ -55,5 +56,4 @@ public class AccountController {
             @RequestBody @Valid final MoneyRequest request) {
         return service.transfer(id, toId, request.amount());
     }
-
 }
